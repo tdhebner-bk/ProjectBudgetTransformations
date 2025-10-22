@@ -1,1 +1,1 @@
-_ProjectComplexitySpreader_ takes the complexity budgets by phase, role, and region and transforms them into a standard budget by month. In notebook format, will have to modify file paths for specific use cases.
+_ProjectComplexitySpreader_ takes the complexity budgets by phase, role, and region and transforms them into a standard budget by month. In notebook format and as a .py, will have to modify file paths for specific use cases.
