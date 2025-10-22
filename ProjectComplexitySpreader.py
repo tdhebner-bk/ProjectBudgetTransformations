@@ -110,6 +110,37 @@ with pd.ExcelWriter(xlsx_path, engine='xlsxwriter') as writer:
     out_df.to_excel(writer, sheet_name="Monthly Breakout", index=False)
 
 # Show a preview table to the user
-print("Monthly Breakout by Complexity, Role, Region", out_df.head(50))
+#print("Monthly Breakout by Complexity, Role, Region", out_df.head(50))
 
-(csv_path, xlsx_path, out_df.shape, global_total_days, global_total_months)
+#(csv_path, xlsx_path, out_df.shape, global_total_days, global_total_months)
+
+#%%
+# ---
+# LONG (tidy) format: one row per Complexity/Role/Region/Month with Hours
+long_df = (
+    out_df
+    .melt(
+        id_vars=['Complexity', 'Role', 'Region'],
+        var_name='Month',
+        value_name='Hours'
+    )
+    # Convert "Month 3" -> 3 for easier grouping/sorting
+    #.assign(Month=lambda d: d['Month'].str.extract(r'(\d+)').astype(int))
+    .sort_values(['Complexity', 'Region', 'Role', 'Month'])
+    .reset_index(drop=True)
+)
+
+# (Optional) If you prefer to drop rows with 0 hours, uncomment:
+# long_df = long_df[long_df['Hours'] != 0].reset_index(drop=True)
+
+# Save long-format outputs
+long_csv_path = r"C:\Users\thebner\OneDrive - Q2e\Monthly_Breakout_Long_By_Complexity_Region_Role.csv"
+long_xlsx_path = r"C:\Users\thebner\OneDrive - Q2e\Monthly_Breakout_Long_By_Complexity_Region_Role.xlsx"
+
+long_df.to_csv(long_csv_path, index=False)
+
+with pd.ExcelWriter(long_xlsx_path, engine='xlsxwriter') as writer:
+    long_df.to_excel(writer, sheet_name="Monthly Long", index=False)
+
+#print("Long (tidy) Monthly Breakout by Complexity, Region, Role", long_df.head(50))
+#(long_csv_path, long_xlsx_path, long_df.shape)
